@@ -167,7 +167,8 @@ if st.session_state.start_flg:
             with st.spinner('評価結果の生成中...'):
                 system_template = ct.SYSTEM_TEMPLATE_EVALUATION.format(
                     llm_text=st.session_state.problem,
-                    user_text=st.session_state.dictation_chat_message
+                    user_text=st.session_state.dictation_chat_message,
+                    english_level=st.session_state.englv
                 )
                 st.session_state.chain_evaluation = ft.create_evaluation_chain(system_template)
                 # 問題文と回答を比較し、評価結果の生成を指示するプロンプトを作成
@@ -177,7 +178,6 @@ if st.session_state.start_flg:
             with st.chat_message("assistant", avatar=ct.AI_ICON_PATH):
                 st.markdown(llm_response_evaluation)
             st.session_state.messages.append({"role": "assistant", "content": llm_response_evaluation})
-            st.session_state.messages.append({"role": "other"})
             
             # 各種フラグの更新
             st.session_state.dictation_flg = True
@@ -278,7 +278,6 @@ if st.session_state.start_flg:
         with st.chat_message("assistant", avatar=ct.AI_ICON_PATH):
             st.markdown(llm_response_evaluation)
         st.session_state.messages.append({"role": "assistant", "content": llm_response_evaluation})
-        st.session_state.messages.append({"role": "other"})
         
         # 各種フラグの更新
         st.session_state.shadowing_flg = True

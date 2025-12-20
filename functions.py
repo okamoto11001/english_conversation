@@ -17,6 +17,7 @@ from langchain.schema import SystemMessage
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationChain
+from langchain.chains import LLMChain
 import constants as ct
 
 def record_audio(audio_input_file_path):
@@ -120,7 +121,7 @@ def play_wav(audio_output_file_path, speed=1.0):
     # LLMからの回答の音声ファイルを削除
     os.remove(audio_output_file_path)
 
-def create_chain(system_template):
+def create_chain(system_template, memory):
     """
     LLMによる回答生成用のChain作成
     """
@@ -132,7 +133,7 @@ def create_chain(system_template):
     ])
     chain = ConversationChain(
         llm=st.session_state.llm,
-        memory=st.session_state.memory,
+        memory=memory,
         prompt=prompt
     )
 
@@ -184,9 +185,8 @@ def create_evaluation_chain(system_template):
         HumanMessagePromptTemplate.from_template("{input}")
     ])
 
-    chain = ConversationChain(
+    chain = LLMChain(
         llm=st.session_state.llm,
-        memory=None,
         prompt=prompt
     )
     return chain
