@@ -57,7 +57,10 @@ if "messages" not in st.session_state:
     )
 
     # モード「日常英会話」用のChain作成
-    st.session_state.chain_basic_conversation = ft.create_chain(ct.SYSTEM_TEMPLATE_BASIC_CONVERSATION)
+    st.session_state.chain_basic_conversation = ft.create_chain(
+        ct.SYSTEM_TEMPLATE_BASIC_CONVERSATION,
+    st.session_state.memory
+    )
 
 # 初期表示
 # col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
