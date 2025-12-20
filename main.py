@@ -164,14 +164,18 @@ if st.session_state.start_flg:
             st.session_state.messages.append({"role": "assistant", "content": st.session_state.problem})
             st.session_state.messages.append({"role": "user", "content": st.session_state.dictation_chat_message})
             
+            llm_text_norm = ft.normalize_text(st.session_state.problem)
+            user_text_norm = ft.normalize_text(st.session_state.dictation_chat_message)
+
             with st.spinner('評価結果の生成中...'):
-                system_template = ct.SYSTEM_TEMPLATE_EVALUATION.format(
-                    llm_text=st.session_state.problem,
-                    user_text=st.session_state.dictation_chat_message
-                )
-                st.session_state.chain_evaluation = ft.create_chain(system_template)
+                    system_template = ct.SYSTEM_TEMPLATE_EVALUATION.format(
+                        llm_text=llm_text_norm,
+                        user_text=user_text_norm,
+                        english_level=st.session_state.englv
+                    )
+            st.session_state.chain_evaluation = ft.create_chain(system_template)
                 # 問題文と回答を比較し、評価結果の生成を指示するプロンプトを作成
-                llm_response_evaluation = ft.create_evaluation()
+            llm_response_evaluation = ft.create_evaluation(input="")
             
             # 評価結果のメッセージリストへの追加と表示
             with st.chat_message("assistant", avatar=ct.AI_ICON_PATH):
@@ -262,11 +266,15 @@ if st.session_state.start_flg:
         st.session_state.messages.append({"role": "assistant", "content": st.session_state.problem})
         st.session_state.messages.append({"role": "user", "content": audio_input_text})
 
+        llm_text_norm = ft.normalize_text(st.session_state.problem)
+        user_text_norm = ft.normalize_text(audio_input_text)
+
         with st.spinner('評価結果の生成中...'):
             if st.session_state.shadowing_evaluation_first_flg:
                 system_template = ct.SYSTEM_TEMPLATE_EVALUATION.format(
-                    llm_text=st.session_state.problem,
-                    user_text=audio_input_text
+                    llm_text=llm_text_norm,
+                    user_text=user_text_norm,
+                    english_level=st.session_state.englv
                 )
                 st.session_state.chain_evaluation = ft.create_chain(system_template)
                 st.session_state.shadowing_evaluation_first_flg = False
