@@ -132,7 +132,7 @@ def create_chain(system_template):
     ])
     chain = ConversationChain(
         llm=st.session_state.llm,
-        memory=None,
+        memory=st.session_state.memory,
         prompt=prompt
     )
 
@@ -174,3 +174,19 @@ def create_evaluation():
     llm_response_evaluation = st.session_state.chain_evaluation.predict(input="")
 
     return llm_response_evaluation
+
+def create_evaluation_chain(system_template):
+    """
+    評価専用Chain（会話履歴を使わない）
+    """
+    prompt = ChatPromptTemplate.from_messages([
+        SystemMessage(content=system_template),
+        HumanMessagePromptTemplate.from_template("{input}")
+    ])
+
+    chain = ConversationChain(
+        llm=st.session_state.llm,
+        memory=None,
+        prompt=prompt
+    )
+    return chain
