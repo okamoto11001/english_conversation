@@ -132,7 +132,7 @@ def create_chain(system_template):
     ])
     chain = ConversationChain(
         llm=st.session_state.llm,
-        memory=st.session_state.memory,
+        memory=None,
         prompt=prompt
     )
 
@@ -174,14 +174,3 @@ def create_evaluation():
     llm_response_evaluation = st.session_state.chain_evaluation.predict(input="")
 
     return llm_response_evaluation
-
-import re
-
-def normalize_text(text: str) -> str:
-    """
-    評価用テキスト正規化
-    """
-    text = text.lower()
-    text = re.sub(r"[^\w\s]", "", text)  # 記号除去
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
